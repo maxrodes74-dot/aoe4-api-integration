@@ -192,8 +192,15 @@ for file_path in sorted(tech_files):
         if not tech_id:
             continue
         
-        costs = tech.get('costs') or {}
-        age = tech.get('age')
+        # Technologies have costs in variations, not at top level
+        if tech.get('variations') and len(tech['variations']) > 0:
+            first_var = tech['variations'][0]
+            costs = first_var.get('costs', {})
+            age = first_var.get('age')
+        else:
+            costs = {}
+            age = tech.get('age')
+        
         age_val = age if age is not None else 'NULL'
         unique = str(tech.get('unique', False)).lower()
         
